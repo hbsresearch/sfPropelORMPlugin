@@ -341,6 +341,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       $ret = false;
     }
+    Phing::shutdown(); // restores error_reporting
 
     return $ret;
   }
@@ -370,6 +371,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
         'dsn'      => $database->getParameter('dsn'),
         'user'     => $database->getParameter('username'),
         'password' => $database->getParameter('password'),
+        'settings'  => array(
+          'queries' => $database->getParameter('queries'),
+          'charset' => array(
+            'value' => $database->getParameter('encoding'),
+          ),
+        ),
       );
     }
     return $connections;
@@ -383,6 +390,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
       'dsn'      => $database->getParameter('dsn'),
       'user'     => $database->getParameter('username'),
       'password' => $database->getParameter('password'),
+      'settings'  => array(
+        'queries' => $database->getParameter('queries'),
+        'charset' => array(
+          'value' => $database->getParameter('encoding'),
+        ),
+      ),
     );
   }
 
@@ -410,6 +423,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   protected function getModels($databaseManager, $verbose = false)
   {
     Phing::startup(); // required to locate behavior classes...
+    Phing::shutdown(); // restores error_reporting
     $schemas = sfFinder::type('file')
       ->name('*schema.xml')
       ->follow_link()
